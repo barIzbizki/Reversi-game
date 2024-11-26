@@ -5,13 +5,20 @@
 public class SimpleDisc implements Disc {
     private Player owner; // return the owner of the disc
 
-
+    /**
+     * Creates a new SimpleDisc with the specified owner.
+     *
+     * @param owner the player who owns the disc
+     */
     public SimpleDisc(Player owner) {
         this.owner = owner;
     }
 
+
     /**
-     *return the owner of the disc
+     * Returns the owner of the disc.
+     *
+     * @return the player who owns the disc
      */
     @Override
     public Player getOwner() {
@@ -19,7 +26,9 @@ public class SimpleDisc implements Disc {
     }
 
     /**
-     * change the owner if the disc
+     * Changes the owner of the disc to the specified player.
+     *
+     * @param player the player who will own the disc
      */
     @Override
     public void setOwner(Player player) {
@@ -27,7 +36,9 @@ public class SimpleDisc implements Disc {
     }
 
     /**
-     * return the string of the simple disc.
+     * Returns a string representation of the SimpleDisc.
+     *
+     * @return the symbol for the SimpleDisc
      */
     @Override
     public String getType() {
