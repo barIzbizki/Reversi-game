@@ -23,37 +23,27 @@ public class GameLogic implements PlayableLogic {
 
     @Override
     public boolean locate_disc(Position a, Disc disc) {
-        // קבלת השחקן הנוכחי
         Player currentPlayer = isFirstPlayerTurn() ? player1 : player2;
-
-        // בדיקה אם המהלך תקין
         if (isMoveValid(a)) {
-            // ניסיון להניח את הדיסקית
             placeDisc(a, disc);
-
-            // בדיקה אם דיסקית הונחה בהצלחה
-            if (getDiscAtPosition(a) == null) {
-                return false; // אם הדיסקית לא הונחה, לא מתבצע כלום
+            if (getDiscAtPosition(a) == null) { // if place a disc wasn't successful
+                return false;
             }
 
-            // תיעוד המהלך בלוג
+         //print
             System.out.println("Player " + (currentPlayer.isPlayerOne() ? "1" : "2") +
                     " placed a " + disc.getType() +
                     " in (" + a.row() + ", " + a.col() + ")");
 
-            // הפיכת דיסקיות בהתאם
+
             flipDiscs(a);
             System.out.println("");
-
-            // הוספת המהלך להיסטוריית המהלכים
             moveHistory.add(new Move(a, disc));
-
-            // החלפת תור השחקן
             isFirst = !isFirst;
 
-            return true; // מהלך בוצע בהצלחה
+            return true; // if the move was successful
         }
-        return false; // מהלך לא תקין
+        return false; // if not
     }
 
     /**
@@ -440,7 +430,7 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * ??????????????????????????????????????????
+     * ?
      */
     private boolean hasValidMove(Player player) {
         for (int row = 0; row < BOARD_SIZE; row++) {
