@@ -201,53 +201,55 @@ public class GameLogic implements PlayableLogic {
      */
     @Override
     public void undoLastMove() {
-        if (!moveHistory.isEmpty()) {
-            System.out.println("Undoing last move:");
+        if ((player1 instanceof HumanPlayer) && (player2 instanceof HumanPlayer)) {
+            if (!moveHistory.isEmpty()) {
+                System.out.println("Undoing last move:");
 
-            // removing the last move from the history of moves
-            Move lastMove = moveHistory.remove(moveHistory.size() - 1);
-            Position lastPosition = lastMove.position();
+                // removing the last move from the history of moves
+                Move lastMove = moveHistory.remove(moveHistory.size() - 1);
+                Position lastPosition = lastMove.position();
 
-            // removing the last disc placed from the board
-            Disc removedDisc = board[lastPosition.row()][lastPosition.col()];
+                // removing the last disc placed from the board
+                Disc removedDisc = board[lastPosition.row()][lastPosition.col()];
 
-            //print
-            String removedDiscType = removedDisc.getType();
-            System.out.printf("\tUndo: removing '%s' from (%d, %d)%n",
-                    removedDiscType, lastPosition.row(), lastPosition.col());
-            board[lastPosition.row()][lastPosition.col()] = null;
+                //print
+                String removedDiscType = removedDisc.getType();
+                System.out.printf("\tUndo: removing '%s' from (%d, %d)%n",
+                        removedDiscType, lastPosition.row(), lastPosition.col());
+                board[lastPosition.row()][lastPosition.col()] = null;
 
-            // recovering discs that were overturned in the last move
-            if (!FlipsHistory.isEmpty()) {
-                List<Disc> flippedDiscs = FlipsHistory.pop();
-                for (Disc flippedDisc : flippedDiscs) {
-                    Player currentOwner = flippedDisc.getOwner();
-                    Player newOwner = currentOwner == player1 ? player2 : player1;
-                    flippedDisc.setOwner(newOwner);
+                // recovering discs that were overturned in the last move
+                if (!FlipsHistory.isEmpty()) {
+                    List<Disc> flippedDiscs = FlipsHistory.pop();
+                    for (Disc flippedDisc : flippedDiscs) {
+                        Player currentOwner = flippedDisc.getOwner();
+                        Player newOwner = currentOwner == player1 ? player2 : player1;
+                        flippedDisc.setOwner(newOwner);
 
-                    // prnit
-                    Position flippedPosition = find_disc(flippedDisc);
-                    String flippedDiscType = flippedDisc.getType();
-                    System.out.printf("\tUndo: flipping back '%s' in (%d, %d)%n",
-                            flippedDiscType, flippedPosition.row(), flippedPosition.col());
+                        // prnit
+                        Position flippedPosition = find_disc(flippedDisc);
+                        String flippedDiscType = flippedDisc.getType();
+                        System.out.printf("\tUndo: flipping back '%s' in (%d, %d)%n",
+                                flippedDiscType, flippedPosition.row(), flippedPosition.col());
+                    }
+                    System.out.println();
                 }
+
+                // if the disc we removed from the board was a bomb - update the number of bombs for the current player
+                if (lastMove.disc() instanceof BombDisc) {
+                    lastMove.disc().getOwner().increase_bomb();
+                }
+                // if the disc we removed from the board was a UnflippableDisc - update the number of UnflippableDisc for the current player
+                if (lastMove.disc() instanceof UnflippableDisc) {
+                    lastMove.disc().getOwner().increase_Unflippedable();
+                }
+
+                // pass the turn
+                isFirst = !isFirst;
+            } else {
+                System.out.println("\tNo previous move available to undo.");
                 System.out.println();
             }
-
-            // if the disc we removed from the board was a bomb - update the number of bombs for the current player
-            if (lastMove.disc() instanceof BombDisc) {
-                lastMove.disc().getOwner().increase_bomb();
-            }
-            // if the disc we removed from the board was a UnflippableDisc - update the number of UnflippableDisc for the current player
-            if (lastMove.disc() instanceof UnflippableDisc) {
-                lastMove.disc().getOwner().increase_Unflippedable();
-            }
-
-            // pass the turn
-            isFirst = !isFirst;
-        } else {
-            System.out.println("\tNo previous move available to undo.");
-            System.out.println();
         }
     }
 
