@@ -13,6 +13,7 @@ public class BombDisc implements Disc {
     @Override
     public void setOwner(Player player) {
         this.owner = player;
+
     }
 
     @Override
