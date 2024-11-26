@@ -1,13 +1,30 @@
 import java.util.List;
 import java.util.Random;
 
+/**
+ * RandomAI represents an artificial intelligence player that makes random moves.
+ * The AI randomly chooses from valid moves and may select different types of discs,
+ * including BombDisc and UnflippableDisc, based on availability.
+ */
+
 public class RandomAI extends AIPlayer {
 
-
+    /**
+     * Creates a new RandomAI player with the specified player type (Player 1 or Player 2).
+     *
+     * @param isPlayerOne a boolean indicating whether the player is Player 1
+     */
     public RandomAI(boolean isPlayerOne) {
         super(isPlayerOne);
     }
 
+    /**
+     * Makes a move by selecting a random valid move from the available moves.
+     * It may also randomly choose to use a BombDisc or UnflippableDisc, if available.
+     *
+     * @param gameStatus the current game state, which includes the valid moves and other game information
+     * @return a Move object representing the randomly chosen move, or null if no valid moves are available
+     */
     @Override
     public Move makeMove(PlayableLogic gameStatus) {
         List<Position> validMoves = gameStatus.ValidMoves();

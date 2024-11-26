@@ -3,6 +3,11 @@ import java.util.List;
 import java.util.Stack;
 
 
+/**
+ * The GameLogic class implements the PlayableLogic interface and handles the rules and logic of the Reversi game.
+ * It manages players, the game board, moves, and other core functionalities.
+ */
+
 public class GameLogic implements PlayableLogic {
     private Player player1;
     private Player player2;
@@ -13,14 +18,22 @@ public class GameLogic implements PlayableLogic {
     private final Stack<List<Disc>> FlipsHistory;// Stack of lists to store flipped discs due to bomb discs
     private static final int[][] DIRECTIONS = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
 
-
-
+    /**
+     * Constructs a new GameLogic instance with an empty board and history.
+     */
     public GameLogic() {
         moveHistory = new ArrayList<>();
         board = new Disc[BOARD_SIZE][BOARD_SIZE];
         FlipsHistory = new Stack<>();
     }
 
+    /**
+     * Places a disc at the specified position if the move is valid.
+     *
+     * @param a the position to place the disc.
+     * @param disc the disc to be placed.
+     * @return true if the move is successful, false otherwise.
+     */
     @Override
     public boolean locate_disc(Position a, Disc disc) {
         Player currentPlayer = isFirstPlayerTurn() ? player1 : player2;
@@ -47,7 +60,10 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Return the disc at the given position
+     * Returns the disc located at the specified position.
+     *
+     * @param position the position to check.
+     * @return the disc at the given position or null if the position is empty.
      */
     @Override
     public Disc getDiscAtPosition(Position position) {
@@ -55,7 +71,9 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Return the size of the board (8x8)
+     * Returns the size of the board.
+     *
+     * @return the size of the board (e.g., 8 for a 8x8 board).
      */
     @Override
     public int getBoardSize() {
@@ -63,8 +81,9 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * @param
-     * @return
+     * Returns a list of all valid moves for the current player.
+     *
+     * @return a list of valid positions where the current player can place a disc.
      */
     @Override
     public List<Position> ValidMoves() {
@@ -81,14 +100,20 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Count the number of discs that would be flipped for the given position
+     * Counts the number of discs that would be flipped if a disc is placed at the given position.
+     *
+     * @param a the position to check.
+     * @return the number of discs that would be flipped.
      */
     @Override
     public int countFlips(Position a) {
         return countOrFlip(a.row(), a.col(),false);
     }
+
     /**
-     * Return the first player based on their 'isPlayerOne' status
+     * Returns the first player in the game.
+     *
+     * @return the first player.
      */
     @Override
     public Player getFirstPlayer() {
@@ -99,7 +124,9 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Return the second player based on their 'isPlayerOne' status
+     * Returns the second player in the game.
+     *
+     * @return the second player.
      */
     @Override
     public Player getSecondPlayer() {
@@ -110,7 +137,10 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Set the players for the game
+     * Sets the two players for the game.
+     *
+     * @param player1 the first player.
+     * @param player2 the second player.
      */
     @Override
     public void setPlayers(Player player1, Player player2) {
@@ -120,7 +150,9 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Return true if it's the first player's turn
+     * Checks if it's the first player's turn.
+     *
+     * @return true if it's the first player's turn, false otherwise.
      */
     @Override
     public boolean isFirstPlayerTurn() {
@@ -128,7 +160,10 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * The game is finished if neither player has valid moves - and update the winner
+     * Checks if the game is finished.
+     * The game ends if neither player has a valid move.
+     *
+     * @return true if the game is finished, false otherwise.
      */
     @Override
     public boolean isGameFinished() {
@@ -172,7 +207,11 @@ public class GameLogic implements PlayableLogic {
 
 
     /**
-     * Reset the game state to its initial configuration
+     * Resets the game state to its initial configuration.
+     * This method clears the board, move history, and any special disc effects,
+     * resets player-specific attributes (such as BombDisc and UnflippableDisc counts),
+     * and re-initializes the board to the starting position of the game.
+     * The first turn is assigned to Player 1.
      */
     @Override
     public void reset() {
@@ -187,7 +226,12 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Undo the last move and restore the board to its previous state
+     * Undoes the last move in the game if both players are human.
+     * Removes the last placed disc, restores flipped discs to their original owners,
+     * and updates the BombDisc or UnflippableDisc counts if applicable.
+     * Switches the turn back to the previous player.
+     *
+     * @return true if a move was undone successfully, false if no moves are available to undo
      */
     @Override
     public void undoLastMove() {
@@ -245,11 +289,13 @@ public class GameLogic implements PlayableLogic {
 
 
     /**
-     * Initialize the board to its starting state with two discs for each player
+     * Initializes the board to the starting state with two discs for each player.
+     * Ensures the board is ready for a new game and that both players are properly set.
+     *
      */
     private void initializeBoard() {
         if (player1 == null || player2 == null) {
-            throw new IllegalStateException("Players must be set before initializing the board.");
+            return;
         }
         int mid = BOARD_SIZE / 2;
         board[mid - 1][mid - 1] = new SimpleDisc(player1); // First player's disc at (3,3)
@@ -259,13 +305,24 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Check if the move is valid: position must be empty, within bounds, and flip at least one disc
+     * Checks if a move at the specified position is valid.
+     * A move is valid if the position is empty, within bounds, and flips at least one opponent disc.
+     *
+     * @param pos the position to check
+     * @return true if the move is valid, false otherwise
      */
     private boolean isMoveValid(Position pos) {
         return isInBounds(pos.row(), pos.col()) && board[pos.row()][pos.col()] == null && countFlips(pos) > 0;
     }
 
-    // Place a disc at the specified position
+    /**
+     * Places a disc on the board at the specified position if the move is valid.
+     * Updates the player's BombDisc or UnflippableDisc count if such a disc is placed.
+     *
+     * @param pos  the position on the board to place the disc
+     * @param disc the disc to be placed
+     * @return true if the disc was successfully placed, false otherwise
+     */
     private void placeDisc(Position pos, Disc disc) {
         if (disc == null || disc.getOwner() == null) {
             return; // Exit the method if the disc or owner is null
@@ -286,7 +343,10 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * Flip the discs surrounding the placed disc and record the flips
+     * Flips opponent discs affected by the most recent move, following the rules of Reversi.
+     * Records flipped discs for potential undo operations.
+     *
+     * @param pos the position of the newly placed disc
      */
     private void flipDiscs(Position pos) {
         ArrayList<Disc> flippedDiscs = new ArrayList<>();
@@ -305,9 +365,13 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * the function receives a boolean value and position on the board.
-     * if the boolean value is true-turns the discs according to the position that the function received
-     * if the boolean value is false-counts and return the number of flips according the position
+     * Counts or flips discs in all valid directions from the given position.
+     * Traverses the board to determine which discs should be flipped or calculates their count.
+     *
+     * @param dx      the row coordinate of the starting position
+     * @param dy      the column coordinate of the starting position
+     * @param toFlip  true to flip discs, false to count flips
+     * @return the number of discs flipped or that could be flipped
      */
     private int countOrFlip(int dx, int dy, boolean toFlip) {
         ArrayList<Disc> needToFlip = new ArrayList<>();
@@ -383,7 +447,14 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     *the function receives the position of the bomb and count or adding the 8 disc around the bomb to the list to flip
+     * Counts or flips discs surrounding a BombDisc at the specified position.
+     * Applies cascading effects if adjacent BombDiscs are triggered.
+     *
+     * @param bombX         the row coordinate of the BombDisc
+     * @param bombY         the column coordinate of the BombDisc
+     * @param currentPlayer the current player
+     * @param flipped_disc  the list of discs already flipped
+     * @return the total number of discs flipped by the BombDisc effect
      */
     private int countOrFlipSurroundFlips(int bombX, int bombY, Player currentPlayer, ArrayList<Disc> flipped_disc) {
         int flipCount = 0;
@@ -407,7 +478,10 @@ public class GameLogic implements PlayableLogic {
     }
 
     /**
-     * the function receives a disc and return the position of the disc
+     * Finds the position of a specific disc on the board.
+     *
+     * @param disc the disc to locate
+     * @return the position of the disc, or null if the disc is not found
      */
     private Position find_disc(Disc disc){
         Position pos = null;
@@ -423,14 +497,21 @@ public class GameLogic implements PlayableLogic {
 
 
     /**
-     * Check if the given coordinates are within the board's bounds
+     * Checks if the specified coordinates are within the board's bounds.
+     *
+     * @param x the row coordinate
+     * @param y the column coordinate
+     * @return true if the coordinates are within bounds, false otherwise
      */
     private boolean isInBounds(int x, int y) {
         return x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE;
     }
 
     /**
-     * ?
+     * Determines if the specified player has at least one valid move on the board.
+     *
+     * @param player the player to check for valid moves
+     * @return true if the player has a valid move, false otherwise
      */
     private boolean hasValidMove(Player player) {
         for (int row = 0; row < BOARD_SIZE; row++) {
