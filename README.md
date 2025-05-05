@@ -44,24 +44,7 @@ Implement `Disc` interface for different disc types:
 - Three types of discs exist: Regular, Unflippable, and Bomb (special flipping rules apply).
 - The game ends when no legal moves are available for the next player.
 
-## Additional Requirements
 
-- **AI Players**: Implement AI players using `RandomAI` and `GreedyAI`. AI should handle legal moves intelligently and can be extended for bonus points with a more advanced AI player.
-- **Undo Functionality**: Allow undoing moves for games with human players only.
-- **Game Reset**: Implement a reset feature to restart the game.
-
-## Submission
-
-- Submit all files as a ZIP file named `ID1_ID2.zip` (replace with your student IDs).
-
-## Coding Guidelines
-
-- Follow OOP principles such as inheritance, encapsulation, and method overloading.
-- Document all classes and methods using JavaDoc.
-- Implement error handling and consider edge cases.
-- Ensure compatibility with the provided GUI.
-- Maintain clean and documented code style.
 
 ---
 
-Good luck!
