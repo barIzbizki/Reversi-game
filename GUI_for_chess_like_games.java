@@ -4,10 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-/**
- * IMPORTANT:
- * DON'T MAKE ANY CHANGES HERE
- */
+
 public class GUI_for_chess_like_games extends JFrame {
     private static final int BUTTON_SIZE = 55;
     private static final int FONT_SIZE = 20;
